@@ -102,6 +102,7 @@ async function main() {
   await increaseTime(1);
   await dex.connect(trader1).createLimitOrder(XRP, 1200, 6, SIDE.BUY);
   await dex.connect(trader2).createMarketOrder(XRP, 1200, SIDE.SELL);
+  console.log(dex.address);
 
   console.log("Trade Added");
 
@@ -128,11 +129,11 @@ async function main() {
   ]);
 
   console.log("Order Added");
-  console.log(dex.address);
+  // console.log(await dex.getTokens());
 
   const orders = await dex.connect(trader1).getOrders(BAT, SIDE.BUY);
   const sellOrders = await dex.connect(trader1).getOrders(BAT, SIDE.SELL);
-  console.log(orders, sellOrders);
+  // console.log(orders, sellOrders);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
