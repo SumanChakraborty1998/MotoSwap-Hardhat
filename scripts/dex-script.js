@@ -102,6 +102,7 @@ async function main() {
   await increaseTime(1);
   await dex.connect(trader1).createLimitOrder(XRP, 1200, 6, SIDE.BUY);
   await dex.connect(trader2).createMarketOrder(XRP, 1200, SIDE.SELL);
+
   console.log(dex.address);
 
   console.log("Trade Added");
@@ -129,7 +130,7 @@ async function main() {
   ]);
 
   console.log("Order Added");
-  // console.log(await dex.getTokens());
+  console.log("From dex-script", await dex.getTokens());
 
   const orders = await dex.connect(trader1).getOrders(BAT, SIDE.BUY);
   const sellOrders = await dex.connect(trader1).getOrders(BAT, SIDE.SELL);

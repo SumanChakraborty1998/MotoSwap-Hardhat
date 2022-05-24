@@ -3,7 +3,7 @@ import detectEthereumProvider from "@metamask/detect-provider";
 import Dex from "./contract/Dex.json";
 import ERC20abi from "./contract/ERC20abi.json";
 
-const DEX_ADDRESS = "0x36C02dA8a0983159322a80FFE9F24b1acfF8B570";
+const DEX_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
 export const getWeb3 = () => {
   return new Promise(async (resolve, reject) => {
@@ -22,9 +22,22 @@ export const getWeb3 = () => {
 };
 
 export const getContracts = async (web3) => {
-  const dex = new ethers.Contract(DEX_ADDRESS, Dex.abi, web3.getSigner());
-  // console.log(dex);
-  // const tokens = await dex.getTokens();
-  // console.log(tokens);
-  return dex;
+  const signer = web3.getSigner();
+  // console.log(await signer.getAddress());
+
+  const dex = new ethers.Contract(DEX_ADDRESS, Dex.abi, signer);
+  console.log(dex.address);
+  const tokens = await dex.getTokens();
+  const tokenContracts = tokens.reduce(
+    (acc, token) => ({
+      ...acc,
+      [ethers.utils.parseBytes32String(token.ticker)]: new ethers.Contract(
+        token.tokenAddress,
+        ERC20abi,
+        signer,
+      ),
+    }),
+    {},
+  );
+  return { dex, tokenContracts };
 };
