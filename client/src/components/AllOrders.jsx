@@ -38,97 +38,99 @@ function createData(amount, price, date) {
 export const AllOrders = ({ orders, selectedToken }) => {
   console.log(orders);
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        width: "75%",
-        // border: "1px solid red",
-        margin: "auto",
-        marginTop: "100px",
-      }}
-    >
-      <>
-        <TableContainer component={Paper}>
-          <Typography variant="h4" noWrap sx={{ background: "lime" }}>
-            Buy
-          </Typography>
-          <Table sx={{ minWidth: 500 }} aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell align="center">Amount</StyledTableCell>
-                <StyledTableCell align="center">Price</StyledTableCell>
-                <StyledTableCell align="center">Date</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {selectedToken === "DAI" ? (
-                <StyledTableRow>
-                  <StyledTableCell align="center"></StyledTableCell>
-                  <StyledTableCell align="center">
-                    No Orders Available
-                  </StyledTableCell>
-                  <StyledTableCell align="center"></StyledTableCell>
-                </StyledTableRow>
-              ) : (
-                orders.buy.map((row, index) => (
-                  <StyledTableRow key={index}>
+    <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          width: "75%",
+          // border: "1px solid red",
+          margin: "auto",
+          marginTop: "10px",
+        }}
+      >
+        <>
+          <TableContainer component={Paper}>
+            <Typography variant="h4" noWrap sx={{ background: "lime" }}>
+              Buy
+            </Typography>
+            <Table sx={{ minWidth: 500 }} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell align="center">Amount</StyledTableCell>
+                  <StyledTableCell align="center">Price</StyledTableCell>
+                  <StyledTableCell align="center">Date</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {selectedToken === "DAI" ? (
+                  <StyledTableRow>
+                    <StyledTableCell align="center"></StyledTableCell>
                     <StyledTableCell align="center">
-                      {row.amount.toNumber() - row.filled.toNumber()}
+                      No Orders Available
                     </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {row.price.toNumber()}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      <Moment fromNow>{parseInt(row.date) * 1000}</Moment>
-                    </StyledTableCell>
+                    <StyledTableCell align="center"></StyledTableCell>
                   </StyledTableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <div style={{ width: " 50px" }}></div>
-        <TableContainer component={Paper}>
-          <Typography variant="h4" noWrap sx={{ background: "red" }}>
-            Sell
-          </Typography>
-          <Table sx={{ minWidth: 700 }} aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell align="center">Amount</StyledTableCell>
-                <StyledTableCell align="center">Price</StyledTableCell>
-                <StyledTableCell align="center">Date</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {selectedToken === "DAI" ? (
-                <StyledTableRow>
-                  <StyledTableCell align="center"></StyledTableCell>
-                  <StyledTableCell align="center">
-                    No Orders Available
-                  </StyledTableCell>
-                  <StyledTableCell align="center"></StyledTableCell>
-                </StyledTableRow>
-              ) : (
-                orders.sell.map((row, index) => (
-                  <StyledTableRow key={index}>
+                ) : (
+                  orders.buy.map((row, index) => (
+                    <StyledTableRow key={index}>
+                      <StyledTableCell align="center">
+                        {row.amount.toNumber() - row.filled.toNumber()}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {row.price.toNumber()}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        <Moment fromNow>{parseInt(row.date) * 1000}</Moment>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <div style={{ width: " 50px" }}></div>
+          <TableContainer component={Paper}>
+            <Typography variant="h4" noWrap sx={{ background: "red" }}>
+              Sell
+            </Typography>
+            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell align="center">Amount</StyledTableCell>
+                  <StyledTableCell align="center">Price</StyledTableCell>
+                  <StyledTableCell align="center">Date</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {selectedToken === "DAI" ? (
+                  <StyledTableRow>
+                    <StyledTableCell align="center"></StyledTableCell>
                     <StyledTableCell align="center">
-                      {row.amount.toNumber() - row.filled.toNumber()}
+                      No Orders Available
                     </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {row.price.toNumber()}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      <Moment fromNow>{parseInt(row.date) * 1000}</Moment>
-                    </StyledTableCell>
+                    <StyledTableCell align="center"></StyledTableCell>
                   </StyledTableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </>
-    </div>
+                ) : (
+                  orders.sell.map((row, index) => (
+                    <StyledTableRow key={index}>
+                      <StyledTableCell align="center">
+                        {row.amount.toNumber() - row.filled.toNumber()}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {row.price.toNumber()}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        <Moment fromNow>{parseInt(row.date) * 1000}</Moment>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </>
+      </div>
+    </>
   );
 };

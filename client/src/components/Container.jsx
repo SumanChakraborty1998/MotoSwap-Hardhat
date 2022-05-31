@@ -17,6 +17,8 @@ import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Sidebar } from "./Sidebar";
 import { AllOrders } from "./AllOrders";
+import { MyOrders } from "./MyOrders";
+import { AllTrades } from "./AllTrades";
 
 const DEX_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
@@ -159,6 +161,16 @@ export const Container = ({
     price,
     date,
   ) => {
+    console.log(
+      tradeId,
+      orderId,
+      ticker,
+      trader1,
+      trader2,
+      amount,
+      price,
+      date,
+    );
     const trade = {
       tradeId,
       orderId,
@@ -177,48 +189,69 @@ export const Container = ({
   }, []);
 
   return (
-    <Box sx={{ display: "flex" }}>
-      {/* <CssBaseline /> */}
-      <AppBar
-        position="fixed"
+    <>
+      <Box sx={{ display: "flex" }}>
+        {/* <CssBaseline /> */}
+        <AppBar
+          position="fixed"
+          sx={{
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+            ml: { sm: `${drawerWidth}px` },
+          }}
+        >
+          <Toolbar>
+            <Typography
+              variant="h4"
+              noWrap
+              component="div"
+              sx={{ margin: "auto", fontWeight: "bold" }}
+            >
+              MotoSwap Exchange of ERC20
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Sidebar
+          setSelectedToken={setSelectedToken}
+          tokens={tokens.filter((item) => item !== "DAI")}
+          selectedToken={selectedToken}
+          deposit={deposit}
+          balance={balance}
+          withdraw={withdraw}
+          createLimitOrder={createLimitOrder}
+          createMarketOrder={createMarketOrder}
+        ></Sidebar>
+      </Box>
+      <Box
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
+          display: "flex",
+          flexDirection: "column",
+          marginLeft: "200px",
+          width: "100%",
         }}
       >
-        <Toolbar>
-          <Typography
-            variant="h4"
-            noWrap
-            component="div"
-            sx={{ margin: "auto", fontWeight: "bold" }}
-          >
-            MotoSwap Exchange of ERC20
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Sidebar
-        setSelectedToken={setSelectedToken}
-        tokens={tokens.filter((item) => item !== "DAI")}
-        selectedToken={selectedToken}
-        deposit={deposit}
-        balance={balance}
-        withdraw={withdraw}
-        createLimitOrder={createLimitOrder}
-        createMarketOrder={createMarketOrder}
-      ></Sidebar>
-      {/* <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-        }}
-      >
-        <Toolbar />
-        {selectedToken}
-      </Box> */}
-      <AllOrders orders={orders} selectedToken={selectedToken} />
-    </Box>
+        <AllTrades trades={trades}></AllTrades>
+        <Typography variant="h4" component="div" sx={{ marginTop: "100px" }}>
+          All Orders
+        </Typography>
+        <AllOrders orders={orders} selectedToken={selectedToken} />
+
+        <Typography variant="h4" component="div" sx={{ marginTop: "100px" }}>
+          My Orders
+        </Typography>
+        <MyOrders
+          orders={{
+            buy: orders.buy.filter(
+              (order) =>
+                order.trader.toLowerCase() === accounts[0].toLowerCase(),
+            ),
+            sell: orders.sell.filter(
+              (order) =>
+                order.trader.toLowerCase() === accounts[0].toLowerCase(),
+            ),
+          }}
+          selectedToken={selectedToken}
+        />
+      </Box>
+    </>
   );
 };
