@@ -1,7 +1,9 @@
 const hre = require("hardhat");
-const { ethers } = require("hardhat");
+require("dotenv").config();
+// const { ethers } = require("hardhat");
 
 async function main() {
+  // console.log(await hre.getContractFactory("Dex"));
   const [DAI, BAT, SHIB, XRP] = ["DAI", "BAT", "SHIB", "XRP"].map((ticker) =>
     hre.ethers.utils.formatBytes32String(ticker),
   );
@@ -11,13 +13,17 @@ async function main() {
     SELL: 1,
   };
 
-  const [trader1, trader2, trader3, trader4] = await hre.ethers.getSigners();
+  const trader1 = process.env.WALLET_ADDRESS_1;
+  const trader2 = process.env.WALLET_ADDRESS_2;
+  const trader3 = process.env.WALLET_ADDRESS_3;
+  // const [trader2, trader3, trader4] = await ethers.getSigners();
 
   // console.log("trader1", trader1.address);
   // console.log("trader2", trader2.address);
   // console.log("trader3", trader3.address);
   // console.log("trader4", trader4.address);
 
+  // console.log(hre);
   const Dex = await hre.ethers.getContractFactory("Dex");
   const Bat = await hre.ethers.getContractFactory("Bat");
   const Dai = await hre.ethers.getContractFactory("Dai");
@@ -36,16 +42,41 @@ async function main() {
   await shib.deployed();
   await xrp.deployed();
 
-  await Promise.all([
-    dex.addToken(DAI, dai.address),
-    dex.addToken(BAT, bat.address),
-    dex.addToken(SHIB, shib.address),
-    dex.addToken(XRP, xrp.address),
-  ]);
+  // await Promise.all([
+  //   dex.addToken(DAI, dai.address),
+  //   dex.addToken(BAT, bat.address),
+  //   dex.addToken(SHIB, shib.address),
+  //   dex.addToken(XRP, xrp.address),
+  // ]);
+
+  const tx1 = new Promise(async (resolve) => {
+    const res = await dex.addToken(DAI, dai.address);
+    await res.wait();
+  });
+
+  const tx2 = new Promise(async (resolve) => {
+    const res = await dex.addToken(BAT, bat.address);
+    await res.wait();
+  });
+
+  const tx3 = new Promise(async (resolve) => {
+    const res = await dex.addToken(SHIB, shib.address);
+    await res.wait();
+  });
+
+  const tx4 = new Promise(async (resolve) => {
+    const res = await dex.addToken(XRP, xrp.address);
+    await res.wait();
+  });
+
+  (async () => {
+    await Promise.all([tx1, tx2, tx3, tx4]);
+  })();
 
   const amount = hre.ethers.utils.parseEther("1000");
 
   const seedTokenBalance = async (token, trader) => {
+    // console.log(token, trader);
     await token.faucet(trader.address, amount);
 
     await token.connect(trader).approve(dex.address, amount);
@@ -58,6 +89,7 @@ async function main() {
   await Promise.all(
     [dai, bat, shib, xrp].map((token) => seedTokenBalance(token, trader1)),
   );
+  console.log("heeeeeeeeeeeere");
 
   await Promise.all(
     [dai, bat, shib, xrp].map((token) => seedTokenBalance(token, trader2)),
@@ -65,16 +97,16 @@ async function main() {
   await Promise.all(
     [dai, bat, shib, xrp].map((token) => seedTokenBalance(token, trader3)),
   );
-  await Promise.all(
-    [dai, bat, shib, xrp].map((token) => seedTokenBalance(token, trader4)),
-  );
+  // await Promise.all(
+  //   [dai, bat, shib, xrp].map((token) => seedTokenBalance(token, trader4)),
+  // );
 
   console.log("Seed Added");
 
-  const increaseTime = async (seconds) => {
-    await ethers.provider.send("evm_increaseTime", [seconds]);
-    await ethers.provider.send("evm_mine");
-  };
+  // const increaseTime = async (seconds) => {
+  //   await ethers.provider.send("evm_increaseTime", [seconds]);
+  //   await ethers.provider.send("evm_mine");
+  // };
 
   // await dex.connect(trader1).createLimitOrder(BAT, 1000, 10, SIDE.BUY);
   // await dex.connect(trader2).createMarketOrder(BAT, 1000, SIDE.SELL);

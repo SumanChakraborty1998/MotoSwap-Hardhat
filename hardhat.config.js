@@ -1,6 +1,17 @@
 // require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-truffle5");
 require("@nomiclabs/hardhat-ganache");
+require("@nomiclabs/hardhat-ethers");
+
+const dotenv = require("dotenv");
+dotenv.config({ path: __dirname + "/.env" });
+const { ALCHEMY_API_KEY, RINKEBY_PRIVATE_KEY } = process.env;
+
+// console.log(ALCHEMY_API_KEY, RINKEBY_PRIVATE_KEY);
+
+// const ALCHEMY_API_KEY = "0UV-P9jqeaNkBnawpNYoABGoEMdFloYD";
+// const RINKEBY_PRIVATE_KEY =
+//   "7a0075f062f48d20b2d30d01d8336621dba0d338c82cf9ee61a4bb91e48374ef";
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -20,4 +31,10 @@ require("@nomiclabs/hardhat-ganache");
  */
 module.exports = {
   solidity: "0.8.4",
+  networks: {
+    rinkeby: {
+      url: `https://eth-rinkeby.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
+      accounts: [`${RINKEBY_PRIVATE_KEY}`],
+    },
+  },
 };
